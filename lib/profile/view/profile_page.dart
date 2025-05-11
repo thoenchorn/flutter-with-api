@@ -13,20 +13,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile Page'),
-      ),
+      appBar: AppBar(title: const Text('Profile Page')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('This is the Profile Page'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Go Back'),
-            ),
+            const Text('Profile Page', style: TextStyle(fontSize: 24)),
+            const SizedBox(height: 20),
+            ElevatedButton(onPressed: () {}, child: const Text('Back to Home')),
           ],
         ),
       ),
