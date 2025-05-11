@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_pro/data/bloc/todo_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,26 +12,40 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    context.read<TodoCubit>().fetchTodos();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Todo App'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('This is the Home Page'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
+      body: BlocBuilder<TodoCubit, TodoState>(
+        builder: (context, state) {
+          if (state.status == TodoStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.status == TodoStatus.loaded) {
+            return ListView.builder(
+              itemCount: state.todos.length,
+
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(state.todos[index].title),
+                  subtitle: Text('${state.todos[index].completed}'),
+                );
               },
-              child: const Text('Go Back'),
-            ),
-          ],
-        ),
-    ),
+            );
+          } else if (state.status == TodoStatus.error) {
+            return Center(child: Text('Error: ${state.errorMessage}'));
+          }
+          return const Center(child: Text('No todos available'));
+
+        },
+      ),
     );
   }
 }
